@@ -3,7 +3,7 @@ import {useStore} from '@store';
 import router from '@router';
 
 const axiosClient = axios.create({
-    baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+    baseURL: `https://imsspu.infinityfreeapp.com/api`,
     withCredentials: true, // Important for CORS with credentials
     headers: {
         'Accept': 'application/json',
