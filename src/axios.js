@@ -2,35 +2,26 @@ import axios from 'axios';
 import {useStore} from '@store';
 import router from '@router';
 
+
 const axiosClient = axios.create({
-    baseURL: `https://imsspu.infinityfreeapp.com/api`,
-    withCredentials: true, // Important for CORS with credentials
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    }
+    baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
 })
 
-axiosClient.interceptors.request.use(config => {
+axiosClient.interceptors.request.use(config=>{
     const store = useStore();
-    if (store.user.token) {
-        config.headers.Authorization = `Bearer ${store.user.token}`;
-    }
+    config.headers.Authorization = `Bearer ${store.user.token}`;
     return config;
 });
-
-axiosClient.interceptors.response.use(
-    response => {
-        return response;
-    },
-    error => {
-        if (error.response?.status === 401) {
-            sessionStorage.removeItem('token');
-            router.push({name:'login'});
-        }
-        console.log(error);
-        throw error; // Re-throw the error so it can be caught by the calling code
+axiosClient.interceptors.request.use(response=>{
+    return response;
+},error=>{
+    if(error.response.status === 401){
+        sessionStorage.removeItem('token');
+        router.push({name:'login'});
     }
-);
+    console.log(error);
+    
+});
+
 
 export default axiosClient;
